@@ -1,0 +1,5 @@
+Wednesday: String together all of the existing code into some semblance of a CPU
+Saturday: Complete Instruction Decoder and test asm
+Sunday: Complete Test Benches
+Saturday Week 2: Complete
+All other days: Grace period for space
