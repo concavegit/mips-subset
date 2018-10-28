@@ -1,8 +1,8 @@
 module alu
   #(parameter width = 32)
    (
-    output signed [width-1:0] result,
-    output                    zero,
+    output reg signed [width-1:0] result,
+    output reg                zero,
                               overflow,
                               carryout,
     input signed [width-1:0]  operandA,
@@ -62,6 +62,7 @@ module alu
            overflow = 0;
            zero = 0;
         end
+
         NOR: begin
            result = ~(operandA | operandB);
            carryout = 0;
