@@ -14,6 +14,7 @@ module decoder
                     regDInCtrl,
    output reg       regWe,
                     dmWe,
+                    bneCtrl,
    output           aluBSrcCtrl,
    output [31:0]    imm,
    input [31:0]     instr
@@ -21,12 +22,12 @@ module decoder
 
    wire [5:0]       opcode, funct;
 
-
    localparam
      LW = 6'h23,
      SW = 6'h2b,
      J = 6'h2,
      JAL = 6'h3,
+     BEQ = 6'h4,
      BNE = 6'h5,
      XORI = 6'he,
      ADDI = 6'h8,
@@ -77,6 +78,7 @@ module decoder
            regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
+           bneCtrl = 0;
         end
 
         SW: begin
@@ -86,6 +88,7 @@ module decoder
            regDInCtrl = REG_DIN_ALU;
            dmWe = 1;
            regWAddr = rt;
+           bneCtrl = 0;
         end
 
         J: begin
@@ -94,6 +97,7 @@ module decoder
            pcSrcCtrl = PC_J;
            dmWe = 0;
            regWAddr = rt;
+           bneCtrl = 0;
         end
 
         JAL: begin
@@ -102,6 +106,16 @@ module decoder
            pcSrcCtrl = PC_J;
            dmWe = 0;
            regWAddr = 31;
+           bneCtrl = 0;
+        end
+
+        BEQ: begin
+           regWe = 0;
+           op = SUB;
+           pcSrcCtrl = PC_BNE;
+           dmWe = 0;
+           regWAddr = rt;
+           bneCtrl = 0;
         end
 
         BNE: begin
@@ -110,6 +124,7 @@ module decoder
            pcSrcCtrl = PC_BNE;
            dmWe = 0;
            regWAddr = rt;
+           bneCtrl = 1;
         end
 
         XORI: begin
@@ -118,6 +133,7 @@ module decoder
            pcSrcCtrl = PC_INC4;
            dmWe = 0;
            regWAddr = rt;
+           bneCtrl = 0;
         end
 
         ADDI: begin
@@ -126,11 +142,13 @@ module decoder
            pcSrcCtrl = PC_INC4;
            dmWe = 0;
            regWAddr = rt;
+           bneCtrl = 0;
         end
 
         RTYPE: begin
            regWAddr = rd;
            dmWe = 0;
+           bneCtrl = 0;
 
            case (funct)
              R_JR: begin
