@@ -4,31 +4,23 @@
 
 module decoder
   (
-   output [4:0]  rd,
-                 rt,
-                 rs,
-   output [2:0]  op,
-   output [1:0]  pcSrc,
-                 regDIn,
-                 regWAddr,
-   output        regWe,
-                 dmWe,
-                 aluBSrc,
-   output [25:0] jAddr,
-   output [31:0] imm,
-   input [31:0]  instr
+   output [25:0]    jAddr,
+   output [4:0]     rd,
+                    rt,
+                    rs,
+   output reg [4:0] regWAddr,
+   output reg [2:0] op,
+   output reg [1:0] pcSrcCtrl,
+                    regDInCtrl,
+   output reg       regWe,
+                    dmWe,
+   output           aluBSrcCtrl,
+   output [31:0]    imm,
+   input [31:0]     instr
    );
 
-   wire [5:0]    opcode, funct;
+   wire [5:0]       opcode, funct;
 
-   assign
-     funct = instr[5:0],
-     rd = instr[15:11],
-     rt = instr[20:16],
-     rs = instr[25:21],
-     opcode = instr[31:26],
-     jAddr = instr[25:0],
-     imm = {{16{instr[15]}}, instr[15:0]};
 
    localparam
      LW = 6'h23,
@@ -53,10 +45,6 @@ module decoder
      ALU_B_REG = 1'b0,
      ALU_B_IMM = 1'b1,
 
-     REG_WADDR_RD = 2'h0,
-     REG_WADDR_RT = 2'h1,
-     REG_WADDR_31 = 2'h2,
-
      REG_DIN_ALU = 2'h0,
      REG_DIN_DM = 2'h1,
      REG_DIN_JAL = 2'h2,
@@ -70,110 +58,109 @@ module decoder
      NOR = 3'h6,
      OR = 3'h7;
 
+   assign
+     funct = instr[5:0],
+     rd = instr[15:11],
+     rt = instr[20:16],
+     rs = instr[25:21],
+     opcode = instr[31:26],
+     jAddr = instr[25:0],
+     imm = {{16{instr[15]}}, instr[15:0]},
+     aluBSrcCtrl = opcode == RTYPE ? ALU_B_REG : ALU_B_IMM;
+
    always @(opcode) begin
       case (opcode)
         LW: begin
            regWe = 1;
            op = ADD;
-           pcSrc = PC_INC4;
-           regDIn = REG_DIN_ALU;
+           pcSrcCtrl = PC_INC4;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         SW: begin
            regWe = 0;
            op = ADD;
-           pcSrc = PC_INC4;
-           regDIn = REG_DIN_ALU;
+           pcSrcCtrl = PC_INC4;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 1;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         J: begin
            regWe = 0;
            op = ADD;
-           pcSrc = PC_J;
+           pcSrcCtrl = PC_J;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         JAL: begin
            regWe = 1;
            op = ADD;
-           pcSrc = PC_J;
+           pcSrcCtrl = PC_J;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_31;
+           regWAddr = 31;
         end
 
         BNE: begin
            regWe = 0;
            op = SUB;
-           pcSrc = PC_BNE;
+           pcSrcCtrl = PC_BNE;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         XORI: begin
            regWe = 1;
            op = XOR;
-           pcSrc = PC_INC4;
+           pcSrcCtrl = PC_INC4;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           // regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         ADDI: begin
            regWe = 1;
            op = ADD;
-           pcSrc = PC_INC4;
+           pcSrcCtrl = PC_INC4;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
-           regWAddr = REG_WADDR_RT;
+           regWAddr = rt;
         end
 
         RTYPE: begin
-           regWAddr = REG_WADDR_RD;
-           aluBSrc = ALU_B_REG;
+           regWAddr = rd;
+           dmWe = 0;
+
            case (funct)
              R_JR: begin
                 regWe = 0;
                 op = ADD;
-                pcSrc = PC_INC4;
-                dmWe = 0;
+                pcSrcCtrl = PC_J;
              end
 
              R_ADD: begin
                 regWe = 1;
                 op = ADD;
-                pcSrc = PC_INC4;
-                dmWe = 0;
+                pcSrcCtrl = PC_INC4;
              end
 
              R_SUB: begin
                 regWe = 1;
                 op = SUB;
-                pcSrc = PC_INC4;
-                dmWe = 0;
+                pcSrcCtrl = PC_INC4;
              end
 
              R_SLT: begin
                 regWe = 1;
                 op = SLT;
-                pcSrc = PC_INC4;
-                dmWe = 0;
+                pcSrcCtrl = PC_INC4;
              end
 
              default: begin
                 regWe = 0;
                 op = ADD;
-                pcSrc = PC_INC4;
-                dmWe = 0;
+                pcSrcCtrl = PC_INC4;
              end
            endcase
         end
@@ -181,9 +168,8 @@ module decoder
         default: begin
            regWe = 0;
            op = ADD;
-           pcSrc = PC_INC4;
+           pcSrcCtrl = PC_INC4;
            dmWe = 0;
-           aluBSrc = ALU_B_IMM;
         end
 
       endcase
