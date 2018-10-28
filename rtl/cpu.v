@@ -13,7 +13,7 @@ module cpu
    wire [4:0]  rd, rt, rs, regWAddr;
    wire [2:0]  op;
    wire [1:0]  pcSrcCtrl, regDInCtrl;
-   wire        regWe, dmWe, aluBSrcCtrl;
+   wire        regWe, dmWe, aluBSrcCtrl, bneCtrl;
    wire [31:0] imm, instr;
 
    decoder decoder0
@@ -28,6 +28,7 @@ module cpu
       .regWAddr(regWAddr),
       .regWe(regWe),
       .dmWe(dmWe),
+      .bneCtrl(bneCtrl),
       .aluBSrcCtrl(aluBSrcCtrl),
       .imm(imm),
       .instr(instr)
@@ -49,9 +50,8 @@ module cpu
       );
 
    // ALU pins
-   wire [31:0] aluOut;
+   wire [31:0] aluOut, aluBSrc;
    wire        aluZero;
-   wire        aluBSrc;
 
    alu alu0
      (
@@ -82,7 +82,7 @@ module cpu
       .dOut(instr),
       .clk(clk),
       .addr(pcSrc),
-      .we(0),
+      .we(1'b0),
       .dIn(0)
       );
 
@@ -97,14 +97,17 @@ module cpu
 
    // BNE
    wire [31:0] bne, bneAddr, pcNext;
+   wire        bneConditioned;
 
-   assign bneAddr = pcSrc + imm;
+   xor(bneConditioned, bneCtrl, aluZero);
+
+   assign bneAddr = pcSrc + (imm << 2);
    assign pcNext = pcSrc + 4;
 
    mux mux1
      (
       .out(bne),
-      .sel(aluZero),
+      .sel(bneConditioned),
       .in0(bneAddr),
       .in1(pcNext)
       );
@@ -122,6 +125,7 @@ module cpu
       .in2(regAOut),
       .in3(bne)
       );
+
    // Choose what data to write to regfile
    mux4way mux3
      (
