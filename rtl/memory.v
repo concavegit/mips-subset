@@ -2,14 +2,14 @@ module memory
   #(
     parameter width = 8,
     wordSz = 4,
-    addrWidth = 32,
+    addrWidth = 16,
     depth = 2**addrWidth,
-    data = "testmem.dat"
+    data = "mem/zeros.dat"
     )
    (
     output [width*wordSz-1:0] dOut,
     input                     clk,
-    input [addrWidth-1:0]     addr,
+    input [31:0]     addr,
     input                     we,
     input [width*wordSz-1:0]  dIn
     );
