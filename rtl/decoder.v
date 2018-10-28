@@ -136,7 +136,7 @@ module decoder
              R_JR: begin
                 regWe = 0;
                 op = ADD;
-                pcSrcCtrl = PC_J;
+                pcSrcCtrl = PC_JR;
              end
 
              R_ADD: begin
