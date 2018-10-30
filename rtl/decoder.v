@@ -34,7 +34,7 @@ module decoder
      RTYPE = 6'h0,
 
      R_JR = 6'h8,
-     R_ADD = 6'h0,
+     R_ADD = 6'h20,
      R_SUB = 6'h22,
      R_SLT = 6'h2a,
 
