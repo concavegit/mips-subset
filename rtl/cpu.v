@@ -77,7 +77,7 @@ module cpu
    // Instruction Memory
    wire [31:0] pcSrc;
 
-   memory instructionMemory
+   memory #(.data("mem/instructions.dat"))instructionMemory
      (
       .dOut(instr),
       .clk(clk),
