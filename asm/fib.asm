@@ -13,4 +13,3 @@ bne $t3 $t2 label1
 
 
 add $v1, $t1,0
-
