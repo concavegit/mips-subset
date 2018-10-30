@@ -38,8 +38,8 @@ module decodertestbenchharness();
     .regDInCtrl(regDInCtrl),
     .regWe(regWe),
     .dmWe(dmWe),
-    .aluBSrcCtrl(aluBSrcCtrl),
     .bneCtrl(bneCtrl),
+    .aluBSrcCtrl(aluBSrcCtrl),
     .imm(imm),
     .instr(instr)
   );
@@ -92,26 +92,54 @@ module decodertestbenchharness();
       $display("Test Case 5 (JAL) Failed");
     end
     
-    instr={6'h4, 20'd29291, 6'h18};
+    instr={6'h4, 20'd2921, 6'h8};
     #10
-    if ((op !== 1) || (pcSrcCtrl !== 3) || (regWe !== 0) || (aluBSrcCtrl !== 0)
+    if ((op !== 1) || (pcSrcCtrl !== 3) || (regWe !== 0) || (aluBSrcCtrl !== 1)
          || (dmWe !== 0) || (bneCtrl !== 0)) begin
-      $display("Test Case 6 (BEQ) Failed, %b", bneCtrl);
+      $display("Test Case 6 (BEQ) Failed, %b", op);
     end
     
-    instr={6'h4, 20'd29291, 6'h18};
+    instr={6'h5, 20'd2291, 6'h1};
     #10
-    if ((op !== 1) || (pcSrcCtrl !== 3) || (regWe !== 0) || (aluBSrcCtrl !== 0)
-         || (dmWe !== 0)|| (bneCtrl !== 1)) begin
-      $display("Test Case 7 (BNE) Failed, %b", bneCtrl);
+    if ((op !== 1) || (pcSrcCtrl !== 3) || (regWe !== 0) || (aluBSrcCtrl !== 1)
+         || (dmWe !== 0) || (bneCtrl !== 1)) begin
+      $display("Test Case 7 (BNE) Failed, %b", aluBSrcCtrl);
     end
     
-//    instr={6'h4, 20'd349291, 6'h38};
-//    #10
-//    if ((op !== 2) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 1)
-//         || (dmWe !== 0)|| (bneCtrl !== 0) || (regDInCtrl !== 0)) begin
-//      $display("Test Case 8 (XORI) Failed");
-//    end
+    instr={6'he, 20'd349291, 6'h38};
+    #10
+    if ((op !== 2) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 1)
+         || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0)) begin
+      $display("Test Case 8 (XORI) Failed");
+    end
+    
+    instr={6'h8, 20'd349291, 6'h38};
+    #10
+    if ((op !== 0) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 1)
+         || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0)) begin
+      $display("Test Case 9 (ADDI) Failed");
+    end
+    
+    instr={6'h0, 20'd49291, 6'h20};
+    #10
+    if ((op !== 0) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 0)
+         || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0) || (regWAddr !== rd)) begin
+      $display("Test Case 10 (ADD) Failed, %b", op);
+    end
+    
+    instr={6'h0, 20'd34921, 6'h22};
+    #10
+    if ((op !== 1) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 0)
+         || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0) || (regWAddr !== rd)) begin
+      $display("Test Case 11 (SUB) Failed, %b", op);
+    end
+    
+    instr={6'h0, 20'd34921, 6'h2a};
+    #10
+    if ((op !== 3) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 0)
+         || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0) || (regWAddr !== rd)) begin
+      $display("Test Case 12 (SLT) Failed, %b", op);
+    end
   end
 
 endmodule
