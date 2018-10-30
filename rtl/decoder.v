@@ -69,7 +69,7 @@ module decoder
      imm = {{16{instr[15]}}, instr[15:0]},
      aluBSrcCtrl = opcode == RTYPE ? ALU_B_REG : ALU_B_IMM;
 
-   always @(opcode) begin
+   always @(*) begin
       case (opcode)
         LW: begin
            regWe = 1;

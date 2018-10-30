@@ -96,7 +96,7 @@ module decodertestbenchharness();
     #10
     if ((op !== 1) || (pcSrcCtrl !== 3) || (regWe !== 0) || (aluBSrcCtrl !== 1)
          || (dmWe !== 0) || (bneCtrl !== 0)) begin
-      $display("Test Case 6 (BEQ) Failed, %b", aluBSrcCtrl);
+      $display("Test Case 6 (BEQ) Failed, %b", op);
     end
     
     instr={6'h5, 20'd2291, 6'h1};
@@ -120,11 +120,11 @@ module decodertestbenchharness();
       $display("Test Case 9 (ADDI) Failed");
     end
     
-    instr={6'h0, 20'd349291, 6'h20};
+    instr={6'h0, 20'd49291, 6'h20};
     #10
     if ((op !== 0) || (pcSrcCtrl !== 0) || (regWe !== 1) || (aluBSrcCtrl !== 0)
          || (dmWe !== 0) || (bneCtrl !== 0) || (regDInCtrl !== 0) || (regWAddr !== rd)) begin
-      $display("Test Case 10 (ADD) Failed, %b", regWe);
+      $display("Test Case 10 (ADD) Failed, %b", op);
     end
     
     instr={6'h0, 20'd34921, 6'h22};
