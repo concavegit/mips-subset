@@ -1,5 +1,5 @@
-addi $t1,$t1,5
-addi $t3,$t3,8
+li $t1,5
+li $t3,8
 
 label1:
 beq $t1,$t3,label2
