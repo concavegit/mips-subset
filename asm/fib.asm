@@ -1,8 +1,8 @@
-add $t0,$t0,1
-add $t1,$t0,1
-add $t2,$t0,6
-add $t4,$t0,0
-add $t3,$t0,0
+li $t0,1
+li $t1,1
+li $t2,6
+li $t4,0
+li $t3,0
 label1:
 
 add $t4, $t1,0
