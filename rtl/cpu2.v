@@ -7,27 +7,29 @@
 
 module cpu2 (input clk);
    reg [31:0]  pc, pcInc;
-   wire        pcSrcCtrl;
+   wire [1:0]  pcSrcCtrl;
    wire [25:0] jAddr26;
-   wire [31:0] jAddr, regAOut, bneRes;
+   reg [31:0]  jAddr;
+   wire [31:0] regAOut, bneRes;
 
    initial pc = 0;
    always @(pc) pcInc = pcInc + 4;
-   always @(jAddr26, pc) jAddr = {pc, jAddr, 2'b0};
+   always @(jAddr26, pc) jAddr = {pc[31:28], jAddr26, 2'b0};
 
    always @(posedge(clk))
      case (pcSrcCtrl)
-       0: pc = pcInc;
-       1: pc = jAddr;
-       2: pc = regAOut;
-       3: pc = bneRes;
+       0: pc <= pcInc;
+       1: pc <= jAddr;
+       2: pc <= regAOut;
+       3: pc <= bneRes;
      endcase
 
    wire [4:0]  rd, rt, rs, regWAddr;
    wire [2:0]  op;
-   wire [1:0]  pcSrcCtrl, regDInCtrl;
-   wire        regWe, dmWe, aluSrcCtrl, bneCtrl;
+   wire [1:0]  regDInCtrl;
+   wire        regWe, dmWe, bneCtrl;
    wire [31:0] imm, instr;
+   wire        aluBSrcCtrl;
 
    decoder decoder0
      (
@@ -74,14 +76,15 @@ module cpu2 (input clk);
       .command(op)
       );
 
-   memory #(.data("mem/instructions.dat")) mem
+   wire [31:0] dmOut;
+   memory mem0
      (
-      .dOut(instr),
+      .dOut(dmOut),
       .instrOut(instr),
       .instrAddr(pc),
       .clk(clk),
-      .addr(pcSrc),
-      .we(1'b0),
+      .addr(pc),
+      .we(dmWe),
       .dIn(0)
       );
 
@@ -94,11 +97,16 @@ module cpu2 (input clk);
       );
 
    wire        bneMuxCtrl;
-   xor (bneMuxCtrl, bneCtrl, aluZero);
+   wire        aluOverflowInv;       
+   not (aluOverflowInv, aluOverflow);
+
+   wire        notOverflowAndZero;       
+   and (notOverflowAndZero, aluOverflowInv, aluZero);
+
+   xor (bneMuxCtrl, bneCtrl, notOverflowAndZero);
+   reg [31:0]  bneAddr;
 
    always @(pc, imm) bneAddr = pc + (imm << 2);
-
-   wire [31:0] bneRes;
 
    mux bneMux
      (
@@ -108,15 +116,13 @@ module cpu2 (input clk);
       .in1(pcInc)
       );
 
-   wire [31:0] pcNext;
-
-   mux regMux
+   mux4way regMux
      (
       .out(regDIn),
       .sel(regDInCtrl),
       .in0(aluOut),
       .in1(dmOut),
-      .in2(pcNext),
+      .in2(pcInc),
       .in3(0)
       );
 endmodule
