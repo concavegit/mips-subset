@@ -16,6 +16,7 @@ module cpu
    wire        regWe, dmWe, aluBSrcCtrl, bneCtrl;
    wire [31:0] imm, instr;
 
+
    decoder decoder0
      (
       .jAddr(jAddr),
@@ -63,7 +64,9 @@ module cpu
       );
 
    // DataMemory pins
-   wire [31:0] dmOut, pcSrc;
+   wire [31:0] dmOut, pcSrcWire;
+   reg  [31:0] pcSrc;
+   initial pcSrc = 0;
 
    memory dataMemory
      (
@@ -74,6 +77,15 @@ module cpu
       .instrAddr(pcSrc),
       .we(dmWe),
       .dIn(regBOut)
+      );
+
+   memory #(.data("mem/instructions.dat"))instructionMemory
+     (
+      .dOut(instr),
+      .clk(clk),
+      .addr(pcSrc),
+      .we(1'b0),
+      .dIn(0)
       );
 
    // AluBSrcCtrl
@@ -108,7 +120,7 @@ module cpu
    // Choose what the next instruction should be
    mux4way mux2
      (
-      .out(pcSrc),
+      .out(pcSrcWire),
       .sel(pcSrcCtrl),
       .in0(pcNext),
       .in1(extJAddr),
@@ -126,5 +138,9 @@ module cpu
       .in2(pcNext),
       .in3(0)
       );
+
+always @(posedge clk) begin
+   pcSrc <= pcSrcWire;
+end
 
 endmodule
