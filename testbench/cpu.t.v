@@ -9,6 +9,6 @@ module cputest();
    initial begin
       $dumpfile("cpu.vcd");
       $dumpvars();
-      #10 $finish;
+      #100 $finish;
    end
 endmodule

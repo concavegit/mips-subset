@@ -17,6 +17,7 @@ module regfile
     );
 
    reg [width-1:0]        registers [depth-1:0];
+   initial registers[0] = 0;
 
    always @(posedge Clk) begin
       if (RegWrite && WriteRegister != 0) begin
