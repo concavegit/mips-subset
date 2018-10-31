@@ -63,27 +63,17 @@ module cpu
       );
 
    // DataMemory pins
-   wire [31:0] dmOut;
+   wire [31:0] dmOut, pcSrc;
 
    memory dataMemory
      (
       .dOut(dmOut),
+      .instrOut(instr),
       .clk(clk),
       .addr(aluOut),
+      .instrAddr(pcSrc),
       .we(dmWe),
       .dIn(regBOut)
-      );
-
-   // Instruction Memory
-   wire [31:0] pcSrc;
-
-   memory #(.data("mem/instructions.dat"))instructionMemory
-     (
-      .dOut(instr),
-      .clk(clk),
-      .addr(pcSrc),
-      .we(1'b0),
-      .dIn(0)
       );
 
    // AluBSrcCtrl
