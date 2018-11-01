@@ -5,7 +5,7 @@
 `include "mux.v"
 `include "mux4way.v"
 
-module cpu2 (input clk);
+module cpu2 #(parameter mem="mem/mips1.dat") (input clk);
    reg [31:0]  pc, pcInc;
    wire [1:0]  pcSrcCtrl;
    wire [25:0] jAddr26;
@@ -13,7 +13,7 @@ module cpu2 (input clk);
    wire [31:0] regAOut, bneRes;
 
    initial pc = 0;
-   always @(pc) pcInc = pcInc + 4;
+   always @(pc) pcInc = pc + 4;
    always @(jAddr26, pc) jAddr = {pc[31:28], jAddr26, 2'b0};
 
    always @(posedge(clk))
@@ -77,7 +77,7 @@ module cpu2 (input clk);
       );
 
    wire [31:0] dmOut;
-   memory mem0
+   memory #(.data(mem)) mem0
      (
       .dOut(dmOut),
       .instrOut(instr),
