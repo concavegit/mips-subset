@@ -106,7 +106,7 @@ module cpu2 #(parameter mem="mem/mips1.dat") (input clk);
    xor (bneMuxCtrl, bneCtrl, notOverflowAndZero);
    reg [31:0]  bneAddr;
 
-   always @(pc, imm) bneAddr = pc + (imm << 2);
+   always @(pc, imm) bneAddr = pcInc + (imm << 2);
 
    mux bneMux
      (

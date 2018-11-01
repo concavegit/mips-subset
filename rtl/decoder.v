@@ -15,7 +15,7 @@ module decoder
    output reg       regWe,
                     dmWe,
                     bneCtrl,
-   output           aluBSrcCtrl,
+   output reg       aluBSrcCtrl,
    output [31:0]    imm,
    input [31:0]     instr
    );
@@ -66,12 +66,13 @@ module decoder
      rs = instr[25:21],
      opcode = instr[31:26],
      jAddr = instr[25:0],
-     imm = {{16{instr[15]}}, instr[15:0]},
-     aluBSrcCtrl = opcode == RTYPE ? ALU_B_REG : ALU_B_IMM;
+     imm = {{16{instr[15]}}, instr[15:0]};
+   // aluBSrcCtrl = opcode == RTYPE ? ALU_B_REG : ALU_B_IMM;
 
    always @(*) begin
       case (opcode)
         LW: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_INC4;
@@ -82,6 +83,7 @@ module decoder
         end
 
         SW: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 0;
            op = ADD;
            pcSrcCtrl = PC_INC4;
@@ -92,6 +94,7 @@ module decoder
         end
 
         J: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 0;
            op = ADD;
            pcSrcCtrl = PC_J;
@@ -102,6 +105,7 @@ module decoder
         end
 
         JAL: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_J;
@@ -112,6 +116,7 @@ module decoder
         end
 
         BEQ: begin
+           aluBSrcCtrl = ALU_B_REG;
            regWe = 0;
            op = SUB;
            pcSrcCtrl = PC_BNE;
@@ -122,6 +127,7 @@ module decoder
         end
 
         BNE: begin
+           aluBSrcCtrl = ALU_B_REG;
            regWe = 0;
            op = SUB;
            pcSrcCtrl = PC_BNE;
@@ -132,6 +138,7 @@ module decoder
         end
 
         XORI: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 1;
            op = XOR;
            pcSrcCtrl = PC_INC4;
@@ -142,6 +149,7 @@ module decoder
         end
 
         ADDI: begin
+           aluBSrcCtrl = ALU_B_IMM;
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_INC4;
@@ -152,6 +160,7 @@ module decoder
         end
 
         RTYPE: begin
+           aluBSrcCtrl = ALU_B_REG;
            regWAddr = rd;
            dmWe = 0;
            bneCtrl = 0;

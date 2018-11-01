@@ -26,7 +26,7 @@ module cputest();
       $dumpfile("cpu.vcd");
       $dumpvars();
       $display("%h, %h", dut.instr, dut.pc, dut.dmOut);
-      #512 $display("Contents of v0: %d", dut.regfile0.registers[2]);
+      #1024 $display("Contents of v0: %d", dut.regfile0.registers[2]);
       $finish;
    end
 endmodule
