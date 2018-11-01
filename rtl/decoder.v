@@ -75,7 +75,7 @@ module decoder
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_INC4;
-           regDInCtrl = REG_DIN_ALU;
+           regDInCtrl = REG_DIN_DM;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 0;
@@ -95,6 +95,7 @@ module decoder
            regWe = 0;
            op = ADD;
            pcSrcCtrl = PC_J;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 0;
@@ -104,6 +105,7 @@ module decoder
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_J;
+           regDInCtrl = REG_DIN_JAL;
            dmWe = 0;
            regWAddr = 31;
            bneCtrl = 0;
@@ -113,6 +115,7 @@ module decoder
            regWe = 0;
            op = SUB;
            pcSrcCtrl = PC_BNE;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 0;
@@ -122,6 +125,7 @@ module decoder
            regWe = 0;
            op = SUB;
            pcSrcCtrl = PC_BNE;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 1;
@@ -131,6 +135,7 @@ module decoder
            regWe = 1;
            op = XOR;
            pcSrcCtrl = PC_INC4;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 0;
@@ -140,6 +145,7 @@ module decoder
            regWe = 1;
            op = ADD;
            pcSrcCtrl = PC_INC4;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
            regWAddr = rt;
            bneCtrl = 0;
@@ -149,6 +155,7 @@ module decoder
            regWAddr = rd;
            dmWe = 0;
            bneCtrl = 0;
+           regDInCtrl = REG_DIN_ALU;
 
            case (funct)
              R_JR: begin
