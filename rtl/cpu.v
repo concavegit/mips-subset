@@ -79,15 +79,6 @@ module cpu
       .dIn(regBOut)
       );
 
-   memory #(.data("mem/instructions.dat"))instructionMemory
-     (
-      .dOut(instr),
-      .clk(clk),
-      .addr(pcSrc),
-      .we(1'b0),
-      .dIn(0)
-      );
-
    // AluBSrcCtrl
    mux mux0
      (
