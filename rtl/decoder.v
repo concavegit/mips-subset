@@ -194,6 +194,7 @@ module decoder
            regWe = 0;
            op = ADD;
            pcSrcCtrl = PC_INC4;
+           regDInCtrl = REG_DIN_ALU;
            dmWe = 0;
         end
 
