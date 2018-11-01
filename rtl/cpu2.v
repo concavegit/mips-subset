@@ -12,7 +12,7 @@ module cpu2 #(parameter mem="mem/mips1.dat") (input clk);
    reg [31:0]  jAddr;
    wire [31:0] regAOut, bneRes;
 
-   initial pc = 8'h00400000;
+   initial pc = 32'h00400000;
    always @(pc) pcInc = pc + 4;
    always @(jAddr26, pc) jAddr = {pc[31:28], jAddr26, 2'b0};
 
