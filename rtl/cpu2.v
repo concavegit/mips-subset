@@ -83,9 +83,9 @@ module cpu2 #(parameter mem="mem/mips1.dat") (input clk);
       .instrOut(instr),
       .instrAddr(pc),
       .clk(clk),
-      .addr(pc),
+      .addr(aluOut),
       .we(dmWe),
-      .dIn(0)
+      .dIn(regBOut)
       );
 
    mux aluBMux
