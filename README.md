@@ -6,6 +6,35 @@ Report (PDF or MarkDown), including:
 
 Written description and block diagram of your processor architecture. Consider including selected RTL to capture how instructions are implemented.
 
+![alt text](https://github.com/concavegit/mips-subset/blob/master/CPU%20schematic.jpg
+)
+
+This the block diagram of our single cycle CPU. All the red wires are control signals coming from the decoder. 
+For an example insturction **addi $t0, $t0, 2**
+
+The relevant control signals would be set in the following way by the decoder
+
+
+**RT** = address of $t0
+
+
+**ALU_B_SRC_CTRL** = 1(to choose immediate instead of the data in register RT)
+
+
+**BNE** = 0
+
+
+**reg_we**= 1 ( write enable would be 1)
+
+
+**reg_write_address** = address of $t0
+
+
+**PC_SRC_CTRL** = 00(Icremnets PC by 4 as it should as there is no branch or jump command)
+
+
+**dm_we** = 0 (as the data memory would not be written to)
+
 
 
 
