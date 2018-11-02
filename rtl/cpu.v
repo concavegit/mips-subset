@@ -5,7 +5,7 @@
 `include "mux.v"
 `include "mux4way.v"
 
-module cpu2 #(parameter mem="mem/mips1.dat") (input clk);
+module cpu #(parameter mem="mem/mips1.dat") (input clk);
    reg [31:0]  pc, pcInc;
    wire [1:0]  pcSrcCtrl;
    wire [25:0] jAddr26;
