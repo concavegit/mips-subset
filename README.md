@@ -68,6 +68,15 @@ Therefore, we spent a long time going over the waveforms to catch errors in BNE 
 Designing a testbench for monitoring elements of memory was difficult.
 In the end, we decided to only monitor the final contents of $v0, using the waveforms and $display statements when necessary.
 
+# Performance
+Our design from the circuit diagram seems optimal enough at a high level.
+We do not repeat components except for muxes at a high level.
+The only change we would make would be switching the inputs of the BNE mux inputs and using an NXOR rather than an XOR gate and reducing area/delay cost.
+However, using 1 to load the immediate seemed logical making the design, and it would have only been a gate cost of 1.
+
+The ALU is the most complicated component of the CPU, as it does not comprise almost entirely of DFFs and muxes.
+By not explicitly re-calculating the two most significant carries to compute overflow and using bit slices rather than the LUT strategy implied by our behavioral ALU, we could have saved a few gate units.
+
 # Work plan reflection
 
 According to the workplan we wanted to started wiring up the CPU completely by the last wednesday and complete by saturday, which is something we were successfully able to do. We then started writing the assembly unit tests and test files along with improving the test benches for debugging. We were able to do that by this wednesday. Since then we have been debugging our integrated CPU. We were able to iron out all of the bugs.
