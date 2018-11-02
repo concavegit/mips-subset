@@ -1,4 +1,4 @@
-`include "../rtl/cpu2.v"
+`include "../rtl/cpu.v"
 module cputest();
    reg clk;
    reg [16:0] counter;
@@ -7,7 +7,7 @@ module cputest();
       counter = 0;
    end
 
-   cpu2 #(.mem("mem/sum1.dat")) dut(clk);
+   cpu #(.mem("mem/sum1.dat")) dut(clk);
    always #1 clk = ~clk;
 
    always #2 begin
