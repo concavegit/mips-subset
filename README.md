@@ -1,5 +1,5 @@
 # mips-subset
-**An implementation of a subset of MIPS CPU
+**An implementation of a subset of MIPS CPU**
 
 
 
@@ -37,7 +37,7 @@ The relevant control signals would be set in the following way by the decoder
 
 
 
-**Description of our test plan and results
+**Description of our test plan and results**
 
 For the testing we had a 3 pronged approach. 
 
@@ -49,6 +49,6 @@ Number 3 was to write more complex assembly code. We ran programs which calculat
 
 Some performance/area analysis of your design. This can be for the full processor, or a case study of choices made designing a single unit.It can be based on calculation, simulation, Vivado synthesis results, or a mix of all three.
 
-**Work plan reflection
+**Work plan reflection**
 
 According to the workplan we wanted to started wiring up the CPU completely by the last wednesday and complete by saturday, which is something we were successfully able to do. We then started writing the assembly unit tests and test files along with improving the test benches for debugging. We were able to do that by this wednesday. Since then we have been debugging our integrated CPU. We were able to iron out all of the bugs.
