@@ -7,7 +7,7 @@ module cputest();
       counter = 0;
    end
 
-   cpu2 #(.mem("mem/hanoi.dat")) dut(clk);
+   cpu2 #(.mem("mem/sum1.dat")) dut(clk);
    always #1 clk = ~clk;
 
    always #2 begin
@@ -26,7 +26,7 @@ module cputest();
       $dumpfile("cpu.vcd");
       $dumpvars();
       $display("%h, %h", dut.instr, dut.pc, dut.dmOut);
-      #4096 $display("Contents of v0: %d", dut.regfile0.registers[2]);
+      #1024 $display("Contents of v0: %d", dut.regfile0.registers[2]);
       $finish;
    end
 endmodule
