@@ -35,6 +35,8 @@ The relevant control signals would be set in the following way by the decoder
 
 
 # Description of our test plan and result
+This is a waveform with all decoder and regfile ports exposed. This helped us catch many errors such as BNE needing to jump to PC+4+IMM<<2, rather than PC + IMM<<2. This also helped us see that our mux inputs for BNE were swapped.
+
 ![](res/gtkwave.png)
 
 For the testing we had a 3 pronged approach. 
@@ -49,6 +51,24 @@ For the testing we had a 3 pronged approach.
   
 Some performance/area analysis of your design. This can be for the full processor, or a case study of choices made designing a single unit.It can be based on calculation, simulation, Vivado synthesis results, or a mix of all three.
 
+# Test Benches
+
+- Regfile: We write values to all registers with both write enable possibilities, checking for changes and consistencies with asserts. We also make sure that $zero is always zero in these processes. We also made sure that both read and write ports were decoupled via asserts.
+
+- ALU: We used a testbench which checks 1024 cases on all 8 operations on all 8 configurations of positive or negative inputs and outputs. This is a verilator testbench.
+
+- CPU: We used a summation testbench, knowing that the final value of $v0 should be 120, the sum of natural numbers to 15.
+
+- Decoder: We randomly chose strings to test each operation, checking the values of the decoder outputs and asserting them.
+
+# Challenges
+The first order of business was testing the decoder, which was a day of work.
+After wiring the decoder into our CPU, we ran some assembly files and realized that our summation assembly did not work.
+Therefore, we spent a long time going over the waveforms to catch errors in BNE (the RTL is PC + 4 + IMM << 2, not PC + IMM<<2 for the jump) and various muxes.
+Designing a testbench for monitoring elements of memory was difficult.
+In the end, we decided to only monitor the final contents of $v0, using the waveforms and $display statements when necessary.
+
 # Work plan reflection
 
 According to the workplan we wanted to started wiring up the CPU completely by the last wednesday and complete by saturday, which is something we were successfully able to do. We then started writing the assembly unit tests and test files along with improving the test benches for debugging. We were able to do that by this wednesday. Since then we have been debugging our integrated CPU. We were able to iron out all of the bugs.
+As opposed to the last lab, we allocated enough time (half a week) to debugging and did not go crazy at midnight.
