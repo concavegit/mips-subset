@@ -53,6 +53,8 @@ Some performance/area analysis of your design. This can be for the full processo
 
 # Test Benches
 
+- CPU Operations: We created a test for each of the 12 assembly operations we implemented.
+
 - Regfile: We write values to all registers with both write enable possibilities, checking for changes and consistencies with asserts. We also make sure that $zero is always zero in these processes. We also made sure that both read and write ports were decoupled via asserts.
 
 - ALU: We used a testbench which checks 1024 cases on all 8 operations on all 8 configurations of positive or negative inputs and outputs. This is a verilator testbench.
