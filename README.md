@@ -2,9 +2,8 @@
 An implementation of a subset of MIPS CPU
 
 
-Report (PDF or MarkDown), including:
 
-Written description and block diagram of your processor architecture. Consider including selected RTL to capture how instructions are implemented.
+ Description and block diagram of  processor architecture.
 
 ![alt text](https://github.com/concavegit/mips-subset/blob/master/CPU%20schematic.jpg
 )
